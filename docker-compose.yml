@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki-server
+    ports:
+      - "3150:3100"
+    command: -config.file=/etc/loki/local-config.yaml -target=all
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: projeto_observabilidade-grafana-dashboard-1
+    ports:
+      - "3001:3000"
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail-agent
+    volumes:
+      - /var/log/thor-scan.json:/var/log/thor-scan.json
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+
+alerta-db:
+    image: mongo:latest
+    container_name: alerta-mongo
+    expose:
+      - "27017"
+
+  alerta:
+    image: alerta/alerta-web:latest
+    container_name: alerta-api
+    ports:
+      - "5000:8080"
+    environment:
+      - DATABASE_URL=mongodb://alerta-db:27017/monitoring
+    depends_on:
+      - alerta-db

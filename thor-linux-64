@@ -1,0 +1,9 @@
+#!/bin/bash
+# Simulador de THOR Triage Scan
+echo "[+] Iniciando varredura THOR em: $2"
+echo "[+] Verificando processos, conexões e integridade..."
+sleep 1
+echo "[+] Analisando diretórios..."
+sleep 1
+echo "[+] Scan concluído com sucesso."
+echo "[+] Resultado: Nenhum indicador de comprometimento (IOC) detectado."
